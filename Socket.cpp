@@ -1,6 +1,9 @@
 #include "Socket.h"
 #include<QDebug>
-
+#include<QJsonDocument>
+#include<QJsonObject>
+#include"gloabal.h"
+#include<QtEndian>
 Socket* Socket::c_instance = NULL;
 
 Socket::Socket()
@@ -9,6 +12,10 @@ Socket::Socket()
     m_runFlag = false;
     m_port = 9999;
     m_ip = "192.168.124.14";
+
+
+    flage=false;
+    length=0;
 }
 
 Socket::~Socket()
@@ -36,7 +43,7 @@ bool Socket::construct()
     connect(m_tcpSocket, SIGNAL(readyRead()), this, SLOT(onDataReceived()));
 
     m_tcpSocket->connectToHost(*m_serverIP, m_port);
-    if(m_tcpSocket->waitForConnected(10)){
+    if(m_tcpSocket->waitForConnected(-1)){
         qDebug()<<QString("连接成功");}
     else{
         qDebug()<<"连接失败";
@@ -146,18 +153,75 @@ void Socket::onDisconnected()
 {
     m_connectStatus = false;
 }
-//通过socket发出不同信号连接不同风格槽函数
+//通过socket发出不同信号连接不同风格槽函数。
 void Socket::onDataReceived()
 {
-/*
-    if (jsonData.contains("widget_type")) {
-        QString widgetType = /* 解析jsonData中的widget_type字段 ;
-    if (widgetType == "MyWidget") {
-        emit updateMyWidget(jsonData);
-    } else if (widgetType == "AnotherWidget") {
-        emit updateAnotherWidget(jsonData);
-    }
-*/
+
+    auto  bytedata__=m_tcpSocket->readAll();
+                                               qDebug()<<bytedata__.size();
+     bytedata.append(bytedata__);
+     if(bytedata.size()<8){
+         return;//继续读取
+     }
+      if(!flage){
+                //读取到八字节后初始化数据包长度
+          flage=true;
+          auto x=bytedata.left(8);
+          length = qFromLittleEndian<qint64>(  *reinterpret_cast<const qint64*>(x.constData()) );
+      }
+                                                              qDebug()<<"datasize"<<length<<"   "<<"bytedatesize"<<bytedata.size();
+     if(length==bytedata.size()){
+       data=QString::fromUtf8(bytedata.mid(8));
+     QJsonDocument jsondoucment=QJsonDocument::fromJson(data.toUtf8());
+     auto jsondata=jsondoucment.object();
+     int x=jsondata["msg_id"].toInt();
+     auto msg_id=static_cast<ServerMessage>(x);
+      auto value=jsondata["msg_value"].toObject();
+      QString msg_value =(QJsonDocument(value)).toJson();   //jsonobejct转化成qstring
+     switch (msg_id) {
+     case ServerMessage::LOGIN_MSG_ACK:
+        {
+          emit LOGIN_MSG_ACK(msg_value);
+         break;
+        }
+     case ServerMessage::REG_MSG_ACK:{
+         emit REG_MSG_ACK(msg_value);
+         break;
+     }
+     case ServerMessage::LOGINOUT_MSG_ACK:{
+         emit LOGINOUT_MSG_ACK(msg_value);
+         break;
+     }
+     case ServerMessage::ONE_CHAT_MSG_ACK:{
+         emit ONE_CHAT_MSG_ACK(msg_value);
+         break;
+     }
+     case ServerMessage::ADD_GROUP_MSG_ACK:{
+         emit ADD_GROUP_MSG_ACK(msg_value);
+         break;
+     }
+     case ServerMessage::ADD_FRIEND_MSG_ACK:{
+         emit ADD_FRIEND_MSG_ACK(msg_value);
+         break;
+     }
+     case ServerMessage::GROUP_CHAT_MSG_ACK:{
+         emit GROUP_CHAT_MSG_ACK(msg_value);
+         break;
+     }
+     case ServerMessage::CREATE_GROUP_MSG_ACK:{
+         emit CREATE_GROUP_MSG_ACK(msg_value);
+         break;
+     }
+     default: break;
+   }
+     data.clear();
+     bytedata.clear();
+     length=0;
+     flage=false;
+     return;//成功处理完数据
+  }else {
+    return;//没有读取完继续读取
+}
 }
 
 

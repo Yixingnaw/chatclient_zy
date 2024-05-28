@@ -62,7 +62,6 @@ private slots:
 
 protected:
     void paintEvent(QPaintEvent *);
-
     // 鼠标支持
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);

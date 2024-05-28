@@ -74,5 +74,14 @@ void  RegisterWidget::registerClicked()
     emit registerSignal(jsonString);
 }
 void RegisterWidget::REG_MSG_ACK(QString& REG_MSG_ACK_data){
-
+     auto jsonobject=QJsonDocument::fromJson(REG_MSG_ACK_data.toUtf8());
+     if(jsonobject["value"]==QString("注册成功")){
+           auto userid = QString::number(jsonobject["UserID"].toInt());
+        QMessageBox::warning(this, "恭喜",userid);
+          return;
+     }
+     if(jsonobject["value"]==QString("注册失败")){
+           QMessageBox::warning(this, "警告", "不能同时登录两个用户");
+         return;
+    }
 }

@@ -10,5 +10,5 @@ Message::Message(unsigned char code, unsigned char param, QString data)
 
     int size = (data.size() > static_cast<int>(sizeof(m_msgData.buf))) ? sizeof(m_msgData.buf) : data.size();
 
-    memcpy(m_msgData.buf, data.toLatin1().data(), size);
+    memcpy(m_msgData.buf, data.toUtf8().data(), size);
 }

@@ -1,7 +1,8 @@
 #ifndef ADDUI_H
 #define ADDUI_H
-
+#include"gloabal.h"
 #include <QWidget>
+#include<QString>
 #include<qstring.h>
 namespace Ui {
 class Addui;
@@ -17,7 +18,7 @@ public:
     void  setData(QString &x);
 private slots:
     void on_pushButton_clicked();
-
+    void ADD_FRIEND_MSG_ACK(QString&);
 private:
     Ui::Addui *ui;
     QString   friendID;

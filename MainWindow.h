@@ -65,6 +65,7 @@ private slots:
     void onCloseBtn();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
 
+
 protected:
     void paintEvent(QPaintEvent *);
 

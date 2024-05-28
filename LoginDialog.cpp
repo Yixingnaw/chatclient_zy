@@ -347,15 +347,7 @@ void LoginDialog::onLoginBtn()
        m_socket->sendMsg(jsonstring);
 
     }
-    // 启动新的界面
-    MainWindow* mainWindow = new MainWindow();
-    mainWindow->show();
-    //mainWindow->activateWindow();
 
-    // 关闭当前界面
-    this->close();
-    //this->hide();
-    saveUserInfo();
 }
 
 
@@ -454,10 +446,19 @@ void LoginDialog::mouseReleaseEvent(QMouseEvent *event)
 
 
  void  LoginDialog::LOGIN_MSG_ACK(QString& LOGIN_MSG_ACK_data){
-       //1：登录失败界面
-
+         auto jsonobject=QJsonDocument::fromJson(LOGIN_MSG_ACK_data.toUtf8());
+          //1：登录失败界面
+        if(jsonobject["value"]==QString("密码错误")){
+             QToolTip::showText(QPoint(x()+m_idCbx->x(), y()+m_idCbx->y()), "密码输入错误请重新输入");
+             return;
+        }
+        if(jsonobject["value"]==QString("用户在线")){
+              QMessageBox::warning(this, "警告", "不能同时登录两个用户");
+            return;
+       }
        //2:登录成功，进入mainwindow，显示数据。
      // 启动新的界面
+       else{
      MainWindow* mainWindow = new MainWindow();
      mainWindow->show();
      //mainWindow->activateWindow();
@@ -466,4 +467,5 @@ void LoginDialog::mouseReleaseEvent(QMouseEvent *event)
      this->close();
      //this->hide();
      saveUserInfo();
+        }
 }
