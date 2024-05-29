@@ -9,10 +9,11 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include<QJsonArray>
 #include<qpainterpath.h>
 #include"ui/addui.h"
 #include"ui/addgroup.h"
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
+MainWindow::MainWindow(const QString& _ui_data,QWidget *parent) : QWidget(parent)
 {
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowIcon(QIcon(":/img/softwareIcon.png"));
@@ -24,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     trayIcon->show();
 
     m_pressFlag = false;
-
+    setUIdata(_ui_data);
     loadResources();
     constructUI();
     connectSlots();
@@ -57,12 +58,15 @@ void MainWindow::constructUI()
 
     setLayout(&m_mainLayout);
 
+     QJsonDocument jsondoucment__=QJsonDocument::fromJson(user_data.toUtf8());
+     auto jsondata__=jsondoucment__.object();
+
     m_submainLayout = new QVBoxLayout;
     m_submainLayout->setContentsMargins(10, 0, 0, 0);
     m_headLabel.setFixedSize(65, 65);
-    m_idLabel.setText("雪狼");
+    m_idLabel.setText( jsondata__.value("Username").toString());
     m_signEdit.setFrame(false);
-    m_signEdit.setPlaceholderText("编辑个性签名");
+    m_signEdit.setPlaceholderText(jsondata__.value("PersonalSignature").toString());
     m_signEdit.setStyleSheet("background-color: rgb(255, 255, 255, 0);");
 
     m_minisizeBtn = new QPushButton(this);;
@@ -189,7 +193,7 @@ void MainWindow::initDisplayArea()
     dialogListWidget = new QListWidget;
     dialogListWidget->setFrameStyle(0);
 
-    friendList = new FriendList(this);//好友栏界面
+    friendList = new FriendList(this,friend_ui_data);//好友栏界面
     friendList->setFrameStyle(0);
 
     groupChatListWidget = new QListWidget;//!!!群界面，待完成
@@ -226,6 +230,45 @@ void MainWindow::paintEvent(QPaintEvent *)
 }
 
 //分割数据，初始化好友数据和群组界面数据
-void   MainWindow::setUIdata(QString& data){
+void   MainWindow::setUIdata(const QString& data){
+
+       QJsonDocument jsondoucment=QJsonDocument::fromJson(data.toUtf8());
+
+        // 获取QJsonObject对象
+        QJsonObject jsonObject = jsondoucment.object();
+
+        // 解析User部分
+        QJsonObject userObject = jsonObject.value("User").toObject();
+          user_data =(QJsonDocument(userObject)).toJson();
+
+        // 解析Group部分
+        QJsonArray groupArray = jsonObject.value("Group").toArray();
+          // 使用QJsonDocument将QJsonArray转换为JSON格式的QByteArray
+          QJsonDocument groupDocument(groupArray);
+          QByteArray groupByteArray = groupDocument.toJson();
+         group_ui_data=groupByteArray;
+
+        for (const QJsonValue& groupValue : groupArray) {
+            QJsonObject groupObject = groupValue.toObject();
+            QString groupName = groupObject.value("GroupName").toString();
+            QString description = groupObject.value("Description").toString();
+
+            // 解析GroupMember部分
+            QJsonArray groupMemberArray = groupObject.value("GroupMember").toArray();
+            for (const QJsonValue& groupMemberValue : groupMemberArray) {
+                QJsonObject groupMemberObject = groupMemberValue.toObject();
+                QString joinTime = groupMemberObject.value("JoinTime").toString();
+                QString role = groupMemberObject.value("Role").toString();
+                int userID = groupMemberObject.value("UserID").toInt();
+
+            }
+        }
+
+        // 解析Group部分
+        QJsonArray friends = jsonObject.value("Friendship").toArray();
+          // 使用QJsonDocument将QJsonArray转换为JSON格式的QByteArray
+          QJsonDocument friend__(friends);
+         friend_ui_data        = friend__.toJson();
+        qDebug()<<friend_ui_data;
 
 }

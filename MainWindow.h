@@ -19,7 +19,7 @@ class MainWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(const QString& _ui_data="",QWidget *parent = 0);
     virtual ~MainWindow();
 
 private:
@@ -58,8 +58,10 @@ private:
     void connectSlots();
     void initDisplayArea();
 private:
+    QString   user_data;//用户自己的信息
     QString   friend_ui_data;//好友界面显示数据。
     QString   group_ui_data;//群组界面显示数据
+    QString   UnreadUserMessage;
 private slots:
     void onMinisizeBtn();
     void onCloseBtn();
@@ -75,7 +77,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
 public:
-     void setUIdata(QString& data);
+     void setUIdata(const QString& data);
 };
 
 #endif // MAINWINDOW_H

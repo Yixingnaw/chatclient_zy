@@ -43,7 +43,7 @@ bool Socket::construct()
     connect(m_tcpSocket, SIGNAL(readyRead()), this, SLOT(onDataReceived()));
 
     m_tcpSocket->connectToHost(*m_serverIP, m_port);
-    if(m_tcpSocket->waitForConnected(-1)){
+    if(m_tcpSocket->waitForConnected(5000)){
         qDebug()<<QString("连接成功");}
     else{
         qDebug()<<"连接失败";
@@ -158,7 +158,7 @@ void Socket::onDataReceived()
 {
 
     auto  bytedata__=m_tcpSocket->readAll();
-                                               qDebug()<<bytedata__.size();
+                                                                   qDebug()<<bytedata__.size();
      bytedata.append(bytedata__);
      if(bytedata.size()<8){
          return;//继续读取
@@ -169,7 +169,7 @@ void Socket::onDataReceived()
           auto x=bytedata.left(8);
           length = qFromLittleEndian<qint64>(  *reinterpret_cast<const qint64*>(x.constData()) );
       }
-                                                              qDebug()<<"datasize"<<length<<"   "<<"bytedatesize"<<bytedata.size();
+                                                                qDebug()<<"datasize"<<length<<"   "<<"bytedatesize"<<bytedata.size();
      if(length==bytedata.size()){
        data=QString::fromUtf8(bytedata.mid(8));
      QJsonDocument jsondoucment=QJsonDocument::fromJson(data.toUtf8());

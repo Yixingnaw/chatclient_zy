@@ -459,7 +459,7 @@ void LoginDialog::mouseReleaseEvent(QMouseEvent *event)
        //2:登录成功，进入mainwindow，显示数据。
      // 启动新的界面
        else{
-     MainWindow* mainWindow = new MainWindow();
+     MainWindow* mainWindow = new MainWindow(LOGIN_MSG_ACK_data);
      mainWindow->show();
      //mainWindow->activateWindow();
 

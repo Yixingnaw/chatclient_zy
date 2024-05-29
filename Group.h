@@ -28,7 +28,6 @@ public:
 
     int id();
     QString name();
-
     void addBuddy(Buddy* buddy);
     void setListwidgetItem(QListWidgetItem* item);
     void displayGroup(QListWidget* listWidget);
@@ -36,6 +35,4 @@ public:
     QListWidgetItem* item();
     void mousePress();
 };
-
-
 #endif // GROUP_H

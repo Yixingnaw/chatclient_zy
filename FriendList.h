@@ -19,22 +19,22 @@ private:
     QWidget* m_parent;
     QList<Group*> m_groupList;    // 分组列表
 
-
+    QString friend_data;
 protected:
     void mousePressEvent(QMouseEvent *event);//鼠标点击事件
     void mouseDoubleClickEvent(QMouseEvent *event);
 
 public:
-    explicit FriendList(QWidget *parent);
+    explicit FriendList(QWidget *parent=nullptr,QString data_="");
     ~FriendList();
 
     void addGroup(Group* group);
 
-    bool getFriendList();       // 获取好友列表
-    void displayFriendList(QString& data);   // 将好友列表显示到界面
+    void setFriendList(QString&);       // 获取好友列表
+    void displayFriendList();   // 将好友列表显示到界面
     void mousePree(QMouseEvent *event);
 
-    QString friend_data;
+
 };
 
 #endif // FRIENDLIST_H

@@ -1,15 +1,18 @@
 #include "FriendList.h"
 #include <QLabel>
 #include <QPixmap>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include<QJsonArray>
 #include "Buddy.h"
 
 #include <QDebug>
 
 
-FriendList::FriendList(QWidget *parent) : QListWidget(parent), m_parent(parent)
+FriendList::FriendList(QWidget *parent,QString data) : QListWidget(parent), m_parent(parent)
 {
-    getFriendList();
-    displayFriendList(friend_data);
+    setFriendList(data);
+    displayFriendList();
 }
 
 FriendList::~FriendList()
@@ -33,21 +36,30 @@ void FriendList::addGroup(Group *group)
 }
 
 
-bool FriendList::getFriendList()       // 获取好友列表
+void FriendList::setFriendList(QString& data)       // 获取好友列表
 {
-    return true;
+    this->friend_data=data;
 }
 
 
 
-void FriendList::displayFriendList(QString& data)   // 将好友列表显示到界面,这里传进来所有的好友用户。
+void FriendList::displayFriendList()   // 将好友列表显示到界面,这里传进来所有的好友用户。
 {
-    Group* group = new Group(0, "Family");
-    Buddy* buddy0 = new Buddy(0, "珊珊", "It's a good day!");
-    Buddy* buddy1 = new Buddy(1, "小芳", "啦啦啦");
-    group->addBuddy(buddy0);
-    group->addBuddy(buddy1);
-    addGroup(group);
+    qDebug()<<friend_data;
+
+    QJsonDocument jsondoucment=QJsonDocument::fromJson(friend_data.toUtf8());
+    auto friendarray=jsondoucment.array();
+
+    Group* group_friend = new Group(0, "好友");
+    for (const QJsonValue& friendValue : friendarray) {
+        QJsonObject friendObject = friendValue.toObject();
+        QString Username = friendObject.value("Username").toString();
+        QString PersonalSignature = friendObject.value("PersonalSignature").toString();
+          Buddy* buddy = new Buddy(0, Username, PersonalSignature);
+           group_friend->addBuddy(buddy);
+    }
+
+    addGroup(group_friend);
 
     Group* group1 = new Group(1, "Friends");
     Buddy* buddy2 = new Buddy(2, "路人甲");
