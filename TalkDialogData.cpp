@@ -1,7 +1,10 @@
 #include "TalkDialog.h"
-
+#include <QJsonDocument>
+#include <QJsonObject>
+#include<QJsonArray>
+#include<QDateTime>
 #include <QDebug>
-
+#include"Buddy.h"
 void TalkDialog::mouseMoveEvent(QMouseEvent *event)
 {
     if (m_pressFlag) {
@@ -82,8 +85,41 @@ void TalkDialog::onSendBtn()
     QString msg = m_inputArea->toPlainText();
 
     if (m_socket) {
-        m_socket->sendMsg(msg);
+
+        QJsonObject message;
+        message["msg_id"]=static_cast<int>(ServerMessage::ONE_CHAT_MSG);
+        QJsonObject message_value;
+        message_value["SenderID"]=   ::curUserInfo.id.toInt();
+        std::function<int()>  funC=std::bind(&Buddy::getID,reinterpret_cast<Buddy*>(this->m_buddy));
+        message_value["ReceiverID"]=funC();
+        message_value["Content"]=msg;
+        message_value["SendTime"]=(QDateTime::currentDateTime()).toString("yyyy-MM-dd");
+        message["msg_value"]=message_value;
+        QJsonDocument personDocument(message);
+        QString jsonstring = personDocument.toJson();
+       m_socket->sendMsg(jsonstring);
+                                      //   qDebug() << "msg:" << msg;
     }
 
-    qDebug() << "msg:" << msg;
+        QString formattedText = QString("<div style='text-align:right;'>"
+                                                "<div style='font-size:small; color:grey;'>%1</div>"
+                                                "<div>%2</div>"
+                                                "</div>").arg((QDateTime::currentDateTime()).toString("yyyy-MM-dd"), msg);
+
+        m_msgDisplayArea->appendHtml(formattedText);
+        m_inputArea->clear();
+
+}
+//显示数据就行。
+void TalkDialog::ONE_CHAT_MSG_ACK_(QString& data){
+    QJsonDocument jsondoucment=QJsonDocument::fromJson(data.toUtf8());
+    auto jsondata=jsondoucment.object();
+    QString SendTime=jsondata.value("SendTime").toString();
+    QString Content=jsondata.value("Content").toString();
+    QString formattedText = QString("<div style='text-align:right;'>"
+                                            "<div style='font-size:small; color:grey;'>%1</div>"
+                                            "<div>%2</div>"
+                                            "</div>").arg(SendTime, Content);
+
+    m_msgDisplayArea->appendHtml(formattedText);
 }

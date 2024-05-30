@@ -3,10 +3,11 @@
 #include <QDebug>
 
 
-Buddy::Buddy(int id, QString nickname, QString signature)
+Buddy::Buddy(bool state_,int id, QString nickname, QString signature)
 {
     m_talkDialog = NULL;
 
+    state=state_;
     m_id = id;
     m_nickname = nickname;
     m_signature = signature;
@@ -36,6 +37,8 @@ Buddy::Buddy(int id, QString nickname, QString signature)
     mainLayout->addLayout(m_vlayout);
 
     setLayout(mainLayout);
+
+
 }
 
 Buddy::~Buddy()
@@ -88,6 +91,27 @@ void Buddy::mouseDoubleClickEvent(QMouseEvent *)
     if (NULL == m_talkDialog) {
         m_talkDialog = new TalkDialog(this);
         m_talkDialog->setWindowTitle(m_nickname);
+         connect(this,&Buddy::ONE_CHAT_MSG_ACK,m_talkDialog,&TalkDialog::ONE_CHAT_MSG_ACK_);
     }
     m_talkDialog->show();
+}
+
+void Buddy::ONE_CHAT_MSG_ACK_(QString& data){
+
+    if (NULL == m_talkDialog) {
+        //界面类第一次加载
+          qDebug()<<"初次加载"<<data;
+        m_talkDialog = new TalkDialog(this);
+        m_talkDialog->setWindowTitle(m_nickname);
+        connect(this,&Buddy::ONE_CHAT_MSG_ACK,m_talkDialog,&TalkDialog::ONE_CHAT_MSG_ACK_);
+    }else {
+        //界面类已经加载
+         qDebug()<<"已经加载界面。m_talkDialog指针已经初始化"<<data;
+
+}
+
+     emit ONE_CHAT_MSG_ACK(data);
+}
+int Buddy::getID(){
+    return  m_id;
 }

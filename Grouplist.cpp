@@ -1,24 +1,23 @@
-#include "FriendList.h"
-#include"Socket.h"
+#include "Grouplist.h"
+
+
 #include <QLabel>
 #include <QPixmap>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include<QJsonArray>
-
 #include "Buddy.h"
 
 #include <QDebug>
 
 
-FriendList::FriendList(QWidget *parent,QString data) : QListWidget(parent), m_parent(parent)
+Grouplist::Grouplist(QWidget *parent,QString data) : QListWidget(parent), m_parent(parent)
 {
     setFriendList(data);
-    displayFriendList();  
-    connect(Socket::GetInstance(),&Socket::ONE_CHAT_MSG_ACK,this,&FriendList::ONE_CHAT_MSG_ACK_);
+    displayFriendList();
 }
 
-FriendList::~FriendList()
+Grouplist::~Grouplist()
 {
     qDebug() << "FriendList::~FriendList()";
     for (int i=0; i<m_groupList.count(); i++) {
@@ -29,7 +28,7 @@ FriendList::~FriendList()
 }
 
 
-void FriendList::addGroup(Group *group)
+void Grouplist::addGroup(Group *group)
 {
     if (NULL == group) {
         return;
@@ -39,38 +38,34 @@ void FriendList::addGroup(Group *group)
 }
 
 
-void FriendList::setFriendList(QString& data)       // 获取好友列表
+void Grouplist::setFriendList(QString& data)       // 获取群组列表
 {
-    this->friend_data=data;
+    this->group_data=data;
 }
 
 
 
-void FriendList::displayFriendList()   // 将好友列表显示到界面,这里传进来所有的好友用户。
+void Grouplist::displayFriendList()
 {
-    qDebug()<<friend_data;
+    qDebug()<<group_data;
 
-    QJsonDocument jsondoucment=QJsonDocument::fromJson(friend_data.toUtf8());
+    QJsonDocument jsondoucment=QJsonDocument::fromJson(group_data.toUtf8());
     auto friendarray=jsondoucment.array();
 
-    Group* group_friend = new Group(0, "好友");
-    connect(this,&FriendList::ONE_CHAT_MSG_ACK,group_friend,&Group::ONE_CHAT_MSG_ACK_Select);//传递好友数据槽函数
-
+    Group* group_friend = new Group(0, "群组");
     for (const QJsonValue& friendValue : friendarray) {
         QJsonObject friendObject = friendValue.toObject();
         QString Username = friendObject.value("Username").toString();
         QString PersonalSignature = friendObject.value("PersonalSignature").toString();
-        int  id_=friendObject.value("UserID").toInt();
-        bool state_=friendObject.value("Sate").toBool();
-          Buddy* buddy = new Buddy(state_,id_, Username, PersonalSignature);
+          Buddy* buddy = new Buddy(true,0, Username, PersonalSignature);
            group_friend->addBuddy(buddy);
-
     }
 
     addGroup(group_friend);
 
     Group* group1 = new Group(1, "Friends");
-    connect(this,&FriendList::ONE_CHAT_MSG_ACK,group1,&Group::ONE_CHAT_MSG_ACK_Select);  //传递好友数据槽函数
+  //  Buddy* buddy2 = new Buddy(2, "路人甲");
+   // group1->addBuddy(buddy2);
     addGroup(group1);
 
     for (int i=0; i<m_groupList.count(); i++) {
@@ -85,7 +80,7 @@ void FriendList::displayFriendList()   // 将好友列表显示到界面,这里�
 }
 
 
-void FriendList::mousePressEvent(QMouseEvent *event)
+void Grouplist::mousePressEvent(QMouseEvent *event)
 {
     //qDebug() << "void FriendList::mousePressEvent(QMouseEvent *event)";
     QListWidget::mousePressEvent(event);
@@ -94,7 +89,7 @@ void FriendList::mousePressEvent(QMouseEvent *event)
 }
 
 
-void FriendList::mouseDoubleClickEvent(QMouseEvent *event)
+void Grouplist::mouseDoubleClickEvent(QMouseEvent *event)
 {
     //qDebug() << "void FriendList::mouseDoubleClickEvent(QMouseEvent *event)";
     QListWidget::mousePressEvent(event);
@@ -102,7 +97,7 @@ void FriendList::mouseDoubleClickEvent(QMouseEvent *event)
     mousePree(event);
 }
 
-void FriendList::mousePree(QMouseEvent *event)
+void Grouplist::mousePree(QMouseEvent *event)
 {
     QListWidgetItem *currentItem = this->itemAt(mapFromGlobal(QCursor::pos()));//鼠标位置的Item，不管右键左键都获取
 
@@ -113,7 +108,4 @@ void FriendList::mousePree(QMouseEvent *event)
             }
         }
     }
-}
-void   FriendList::ONE_CHAT_MSG_ACK_(QString& data){
-    emit ONE_CHAT_MSG_ACK(data);
 }

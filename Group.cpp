@@ -1,5 +1,7 @@
 #include "Group.h"
-
+#include <QJsonDocument>
+#include <QJsonObject>
+#include<QJsonArray>
 #include <QDebug>
 
 Group::Group(int id, QString name)
@@ -76,5 +78,20 @@ void Group::mousePress()
 
     for (int i=0; i<m_friendList.count(); i++) {
         m_friendList[i]->item()->setHidden(m_isHide);
+    }
+}
+
+void Group::ONE_CHAT_MSG_ACK_Select(QString& data){
+
+    QJsonDocument jsondoucment=QJsonDocument::fromJson(data.toUtf8());
+    auto jsondata=jsondoucment.object();
+    int  SenderID=jsondata.value("SenderID").toInt();
+    for(auto x:m_friendList){
+        //通过发送方主键id来识别唯一界面。
+        if(SenderID==x->id()){
+
+            x->ONE_CHAT_MSG_ACK_(data);
+            break;
+        }
     }
 }

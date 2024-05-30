@@ -34,5 +34,9 @@ public:
 
     QListWidgetItem* item();
     void mousePress();
+signals:
+
+public slots:
+      void ONE_CHAT_MSG_ACK_Select(QString& data);//具体选择触发显示哪个界面的函数
 };
 #endif // GROUP_H

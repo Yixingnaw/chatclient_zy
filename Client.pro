@@ -12,6 +12,7 @@ TARGET = TalkClient
 TEMPLATE = app
 
 SOURCES += main.cpp\
+    Grouplist.cpp \
         LoginDialog.cpp \
     MainWindowUI.cpp \
     MainWindowData.cpp \
@@ -28,6 +29,7 @@ SOURCES += main.cpp\
     ui/addui.cpp
 
 HEADERS  += LoginDialog.h \
+    Grouplist.h \
     MainWindow.h \
     FriendList.h \
     Buddy.h \

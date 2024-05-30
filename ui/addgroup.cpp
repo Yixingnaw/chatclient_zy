@@ -54,6 +54,7 @@ void Addgroup::on_pushButton_clicked()
 
      }
 }
+
 void Addgroup::on_pushButton_2_clicked()
 {
     auto GroupName=ui->lineEdit_2->text();

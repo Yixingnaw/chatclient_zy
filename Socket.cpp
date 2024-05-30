@@ -58,6 +58,7 @@ Socket* Socket::GetInstance()
         c_instance = new Socket();
         // 若第二阶段构造失败，返回 NULL
         if (!(c_instance && c_instance->construct())) {
+
             delete c_instance;
             c_instance = NULL;
         }
@@ -194,6 +195,7 @@ void Socket::onDataReceived()
      }
      case ServerMessage::ONE_CHAT_MSG_ACK:{
          emit ONE_CHAT_MSG_ACK(msg_value);
+
          break;
      }
      case ServerMessage::ADD_GROUP_MSG_ACK:{

@@ -73,6 +73,9 @@ public slots:
     void onMaxsizeBtn();
     void onCloseBtn();
     void onSendBtn();
+
+public slots:
+      void ONE_CHAT_MSG_ACK_(QString& data);//真正的数据界面显示函数。
 };
 
 #endif // TALKDIALOG_H

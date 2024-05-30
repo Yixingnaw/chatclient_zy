@@ -34,7 +34,10 @@ public:
     void displayFriendList();   // 将好友列表显示到界面
     void mousePree(QMouseEvent *event);
 
-
+signals:
+     void ONE_CHAT_MSG_ACK(QString&);//继续向分组界面传输数据。
+public slots:
+      void ONE_CHAT_MSG_ACK_(QString& data);
 };
 
 #endif // FRIENDLIST_H

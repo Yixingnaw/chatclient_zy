@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include"gloabal.h"
+#include"Grouplist.h"
 #include <QMouseEvent>
 #include <QPainter>
 #include <QFont>
@@ -196,7 +197,7 @@ void MainWindow::initDisplayArea()
     friendList = new FriendList(this,friend_ui_data);//好友栏界面
     friendList->setFrameStyle(0);
 
-    groupChatListWidget = new QListWidget;//!!!群界面，待完成
+    groupChatListWidget = new Grouplist(this,friend_ui_data);//群聊界面
     groupChatListWidget->setFrameStyle(0);
 
     m_displayArea.addTab(dialogListWidget, QIcon(QPixmap(":/img/dialogIcon.png")), "");
