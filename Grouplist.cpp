@@ -55,9 +55,12 @@ void Grouplist::displayFriendList()
     Group* group_friend = new Group(0, "群组");
     for (const QJsonValue& friendValue : friendarray) {
         QJsonObject friendObject = friendValue.toObject();
-        QString Username = friendObject.value("Username").toString();
-        QString PersonalSignature = friendObject.value("PersonalSignature").toString();
-          Buddy* buddy = new Buddy(true,0, Username, PersonalSignature);
+        QString Username = friendObject.value("GroupName").toString();
+        QString PersonalSignature = friendObject.value("Description").toString();
+        QString GroupMember=   QJsonDocument(friendObject.value("GroupMember").toArray()).toJson();
+                                      //qDebug()<<GroupMember<<"会不会有一天";
+        int id_=friendObject.value("GroupID").toInt();
+          Buddy* buddy = new Buddy(id_,Username, PersonalSignature,GroupMember);
            group_friend->addBuddy(buddy);
     }
 

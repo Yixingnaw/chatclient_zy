@@ -38,7 +38,38 @@ Buddy::Buddy(bool state_,int id, QString nickname, QString signature)
 
     setLayout(mainLayout);
 
+}
+Buddy::Buddy(int GroupID,QString GroupName, QString Description,QString GroupMember){
+         m_talkDialog = NULL;
+    GroupID_=GroupID;
+    GroupName_=GroupName;
+    Description_=Description;
+   GroupMember_=GroupMember;
+      m_headLabel = new QLabel(this);
+      m_nicknameLabel = new QLabel(this);
+      m_signatureLabel = new QLabel(this);
 
+      m_headLabel->setFixedSize(36, 40);
+      m_headLabel->setToolTip(QString::number(GroupID_));
+      m_headLabel->setPixmap(QPixmap("://img/headIcon.jpg").scaled(m_headLabel->width(), m_headLabel->height()));
+      m_nicknameLabel->setText(GroupName_);
+      m_signatureLabel->setText(Description_);
+
+      //设置个性签名字体为灰色
+      QPalette color;
+      color.setColor(QPalette::Text,Qt::gray);
+      m_signatureLabel->setPalette(color);
+
+      m_vlayout = new QVBoxLayout();
+      m_vlayout->addWidget(m_nicknameLabel);
+      m_vlayout->addWidget(m_signatureLabel);
+
+      //mainLayout->setSpacing(10);
+      mainLayout = new QHBoxLayout();
+      mainLayout->addWidget(m_headLabel);
+      mainLayout->addLayout(m_vlayout);
+
+      setLayout(mainLayout);
 }
 
 Buddy::~Buddy()

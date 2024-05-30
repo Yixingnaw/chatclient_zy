@@ -14,7 +14,7 @@
 #include <QPushButton>
 #include <QSystemTrayIcon>
 #include "FriendList.h"
-
+#include"Grouplist.h"
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -51,12 +51,14 @@ private:
 
     QListWidget* dialogListWidget;
     FriendList* friendList;
-    QListWidget* groupChatListWidget;
+    Grouplist* groupChatListWidget;
 
     void loadResources();
     void constructUI();
     void connectSlots();
     void initDisplayArea();
+private:
+    int switch_case_;//根据值初始化群组界面或者好友界面
 private:
     QString   user_data;//用户自己的信息
     QString   friend_ui_data;//好友界面显示数据。

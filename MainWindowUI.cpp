@@ -28,7 +28,9 @@ MainWindow::MainWindow(const QString& _ui_data,QWidget *parent) : QWidget(parent
     m_pressFlag = false;
     setUIdata(_ui_data);
     loadResources();
+
     constructUI();
+
     connectSlots();
     initDisplayArea();
 }
@@ -61,7 +63,6 @@ void MainWindow::constructUI()
 
      QJsonDocument jsondoucment__=QJsonDocument::fromJson(user_data.toUtf8());
      auto jsondata__=jsondoucment__.object();
-
     m_submainLayout = new QVBoxLayout;
     m_submainLayout->setContentsMargins(10, 0, 0, 0);
     m_headLabel.setFixedSize(65, 65);
@@ -197,7 +198,7 @@ void MainWindow::initDisplayArea()
     friendList = new FriendList(this,friend_ui_data);//好友栏界面
     friendList->setFrameStyle(0);
 
-    groupChatListWidget = new Grouplist(this,friend_ui_data);//群聊界面
+    groupChatListWidget = new Grouplist(this,group_ui_data);//群聊界面
     groupChatListWidget->setFrameStyle(0);
 
     m_displayArea.addTab(dialogListWidget, QIcon(QPixmap(":/img/dialogIcon.png")), "");
@@ -248,7 +249,7 @@ void   MainWindow::setUIdata(const QString& data){
           QJsonDocument groupDocument(groupArray);
           QByteArray groupByteArray = groupDocument.toJson();
          group_ui_data=groupByteArray;
-
+            qDebug()<<group_ui_data;
         for (const QJsonValue& groupValue : groupArray) {
             QJsonObject groupObject = groupValue.toObject();
             QString groupName = groupObject.value("GroupName").toString();
@@ -265,11 +266,10 @@ void   MainWindow::setUIdata(const QString& data){
             }
         }
 
-        // 解析Group部分
+        // 解析friend部分
         QJsonArray friends = jsonObject.value("Friendship").toArray();
-          // 使用QJsonDocument将QJsonArray转换为JSON格式的QByteArray
           QJsonDocument friend__(friends);
          friend_ui_data        = friend__.toJson();
-        qDebug()<<friend_ui_data;
+        //qDebug()<<friend_ui_data;
 
 }
