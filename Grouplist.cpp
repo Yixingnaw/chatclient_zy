@@ -1,13 +1,11 @@
 #include "Grouplist.h"
 
-
+#include"Socket.h"
 #include <QLabel>
 #include <QPixmap>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include<QJsonArray>
-#include "Buddy.h"
-
 #include <QDebug>
 
 
@@ -29,7 +27,7 @@ Grouplist::~Grouplist()
 }
 
 
-void Grouplist::addGroup(Group *group)
+void Grouplist::addGroup(Group_group *group)
 {
     if (NULL == group) {
         return;
@@ -52,8 +50,9 @@ void Grouplist::displayFriendList()
 
     QJsonDocument jsondoucment=QJsonDocument::fromJson(group_data.toUtf8());
     auto friendarray=jsondoucment.array();
+    Group_group* group_friend = new Group_group(0, "群组");
+         connect(this,&Grouplist::GROUP_CHAT_MSG_ACK,group_friend,&Group_group::GROUP_CHAT_MSG_ACK_Select);//连接槽函数
 
-    Group* group_friend = new Group(0, "群组");
     for (const QJsonValue& friendValue : friendarray) {
         QJsonObject friendObject = friendValue.toObject();
         QString Username = friendObject.value("GroupName").toString();
@@ -61,13 +60,15 @@ void Grouplist::displayFriendList()
         QString GroupMember=   QJsonDocument(friendObject.value("GroupMember").toArray()).toJson();
                                       //qDebug()<<GroupMember<<"会不会有一天";
         int id_=friendObject.value("GroupID").toInt();
-          Buddy* buddy = new Buddy(id_,Username, PersonalSignature,GroupMember);
+          Buddy_group* buddy = new Buddy_group(id_,Username, PersonalSignature,GroupMember);
            group_friend->addBuddy_group(buddy);
     }
 
     addGroup(group_friend);
 
-    Group* group1 = new Group(1, "Friends");
+    Group_group* group1 = new Group_group(1, "Friends");
+    connect(this,&Grouplist::GROUP_CHAT_MSG_ACK,group1,&Group_group::GROUP_CHAT_MSG_ACK_Select);//连接槽函数
+
   //  Buddy* buddy2 = new Buddy(2, "路人甲");
    // group1->addBuddy(buddy2);
     addGroup(group1);
@@ -97,7 +98,6 @@ void Grouplist::mouseDoubleClickEvent(QMouseEvent *event)
 {
     //qDebug() << "void FriendList::mouseDoubleClickEvent(QMouseEvent *event)";
     QListWidget::mousePressEvent(event);
-
     mousePree(event);
 }
 

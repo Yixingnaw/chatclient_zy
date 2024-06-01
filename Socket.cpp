@@ -170,7 +170,7 @@ void Socket::onDataReceived()
           auto x=bytedata.left(8);
           length = qFromLittleEndian<qint64>(  *reinterpret_cast<const qint64*>(x.constData()) );
       }
-                                                                qDebug()<<"datasize"<<length<<"   "<<"bytedatesize"<<bytedata.size();
+                                                                    qDebug()<<"datasize"<<length<<"   "<<"bytedatesize"<<bytedata.size();
      if(length==bytedata.size()){
        data=QString::fromUtf8(bytedata.mid(8));
      QJsonDocument jsondoucment=QJsonDocument::fromJson(data.toUtf8());

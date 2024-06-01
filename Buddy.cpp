@@ -39,39 +39,9 @@ Buddy::Buddy(bool state_,int id, QString nickname, QString signature)
     setLayout(mainLayout);
 
 }
-Buddy::Buddy(int GroupID,QString GroupName, QString Description,QString GroupMember){
-         m_talkDialog = NULL;
-    GroupID_=GroupID;
-    GroupName_=GroupName;
-    Description_=Description;
-   GroupMember_=GroupMember;
-      m_headLabel = new QLabel(this);
-      m_nicknameLabel = new QLabel(this);
-      m_signatureLabel = new QLabel(this);
+Buddy::Buddy(QWidget* parent):QWidget(parent){
 
-      m_headLabel->setFixedSize(36, 40);
-      m_headLabel->setToolTip(QString::number(GroupID_));
-      m_headLabel->setPixmap(QPixmap("://img/headIcon.jpg").scaled(m_headLabel->width(), m_headLabel->height()));
-      m_nicknameLabel->setText(GroupName_);
-      m_signatureLabel->setText(Description_);
-
-      //设置个性签名字体为灰色
-      QPalette color;
-      color.setColor(QPalette::Text,Qt::gray);
-      m_signatureLabel->setPalette(color);
-
-      m_vlayout = new QVBoxLayout();
-      m_vlayout->addWidget(m_nicknameLabel);
-      m_vlayout->addWidget(m_signatureLabel);
-
-      //mainLayout->setSpacing(10);
-      mainLayout = new QHBoxLayout();
-      mainLayout->addWidget(m_headLabel);
-      mainLayout->addLayout(m_vlayout);
-
-      setLayout(mainLayout);
 }
-
 Buddy::~Buddy()
 {
     delete m_talkDialog;
@@ -132,7 +102,7 @@ void Buddy::ONE_CHAT_MSG_ACK_(QString& data){
     if (NULL == m_talkDialog) {
         //界面类第一次加载
           qDebug()<<"初次加载"<<data;
-        m_talkDialog = new TalkDialog(this);
+        m_talkDialog = new TalkDialog(this); //指定父窗口buddy  +
         m_talkDialog->setWindowTitle(m_nickname);
         connect(this,&Buddy::ONE_CHAT_MSG_ACK,m_talkDialog,&TalkDialog::ONE_CHAT_MSG_ACK_);
     }else {
@@ -143,9 +113,7 @@ void Buddy::ONE_CHAT_MSG_ACK_(QString& data){
 
      emit ONE_CHAT_MSG_ACK(data);
 }
-void  Buddy::GROUP_CHAT_MSG_ACK_(QString& data){
 
-}
 int Buddy::getID(){
     return  m_id;
 }

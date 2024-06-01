@@ -34,18 +34,12 @@ protected:
     bool state;  //是否在线标识
     QImage m_headIcon;      // 头像
 
-    //群组界面数据
-     int  GroupID_;
-     QString GroupName_;
-     QString Description_;
-     QString GroupMember_;
 
     void mousePressEvent(QMouseEvent *);//鼠标点击事件
     void mouseDoubleClickEvent(QMouseEvent *);
 public:
     explicit Buddy(bool state_=false,int id=0, QString nickname="", QString signature="");//好友界面数据
-
-     explicit Buddy(int GroupID=0 ,QString GroupName="", QString Description="",QString GroupMember="");//群组界面数据
+    explicit Buddy(QWidget* parent);
     virtual ~Buddy();
 
     int id();
@@ -60,10 +54,10 @@ public:
 
 signals:
      void ONE_CHAT_MSG_ACK(QString&);//继续向好友分组界面传输数据。
-     void   GROUP_CHAT_MSG_ACK(QString&);//群组界面传输数据
+
 public slots:
       void ONE_CHAT_MSG_ACK_(QString& data);
-      void GROUP_CHAT_MSG_ACK_(QString& data);
+
 };
 
 #endif // BUDDY_H

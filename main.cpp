@@ -7,7 +7,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QWidget *aa=new QWidget();
+    //QWidget *aa=new QWidget();
    //qDebug() << sizeof(Message);
     LoginDialog w;
     w.show();

@@ -65,7 +65,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
 public:
-    explicit TalkDialog(Buddy *parent = 0);
+    explicit TalkDialog(QWidget *parent = 0);
     virtual ~TalkDialog();
 
 public slots:

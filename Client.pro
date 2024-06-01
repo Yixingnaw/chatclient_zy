@@ -12,6 +12,8 @@ TARGET = TalkClient
 TEMPLATE = app
 
 SOURCES += main.cpp\
+    Buddy_group.cpp \
+    Group_group.cpp \
     Grouplist.cpp \
         LoginDialog.cpp \
     MainWindowUI.cpp \
@@ -26,9 +28,12 @@ SOURCES += main.cpp\
     Message.cpp \
     gloabal.cpp \
     ui/addgroup.cpp \
-    ui/addui.cpp
+    ui/addui.cpp \
+    ui/talkdialog_group.cpp
 
 HEADERS  += LoginDialog.h \
+    Buddy_group.h \
+    Group_group.h \
     Grouplist.h \
     MainWindow.h \
     FriendList.h \
@@ -40,12 +45,14 @@ HEADERS  += LoginDialog.h \
     Message.h \
     ui/addgroup.h \
     gloabal.h \
-    ui/addui.h
+    ui/addui.h \
+    ui/talkdialog_group.h
 
 RESOURCES += \
     resources.qrc
 
 FORMS += \
     ui/addgroup.ui \
-    ui/addui.ui
+    ui/addui.ui \
+    ui/talkdialog_group.ui
 

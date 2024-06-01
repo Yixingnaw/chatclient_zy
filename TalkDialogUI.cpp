@@ -7,11 +7,13 @@
 #include<qpainterpath.h>
 #include <QDebug>
 
-TalkDialog::TalkDialog(Buddy *parent) : m_buddy(parent)
+TalkDialog::TalkDialog(QWidget *parent) : QWidget(parent)
 {
+
     m_pressFlag = false;
     m_isMaxsize = false;
 
+    m_buddy=reinterpret_cast<Buddy*>( QWidget::parent());   //
     m_socket = Socket::GetInstance();
 
     loadResource();

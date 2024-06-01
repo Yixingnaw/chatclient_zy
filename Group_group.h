@@ -1,5 +1,6 @@
-#ifndef GROUP_H
-#define GROUP_H
+#ifndef GROUP_GROUP_H
+#define GROUP_GROUP_H
+
 
 #include <QWidget>
 #include <QString>
@@ -9,9 +10,9 @@
 #include <QHBoxLayout>
 #include <QListWidgetItem>
 
-#include "Buddy.h"
+#include "Buddy_group.h"
 
-class Group : public QWidget
+class Group_group : public QWidget
 {
     Q_OBJECT
 private:
@@ -19,17 +20,17 @@ private:
     int m_id;                      // 组ID
     QString m_name;                // 组名称
     QListWidgetItem* m_item;
-    QList<Buddy*> m_friendList;    // 好友列表
 
-
+    QList<Buddy_group*> m_groupList;    //群组列表
 protected:
 public:
-    explicit Group(int id=0, QString name="");
-    virtual ~Group();
+    explicit Group_group(int id=0, QString name="");
+    virtual ~Group_group();
 
     int id();
     QString name();
-    void addBuddy_friend(Buddy* buddy);
+
+    void  addBuddy_group(Buddy_group* buddy);
     void setListwidgetItem(QListWidgetItem* item);
     void displayGroup(QListWidget* listWidget);
 
@@ -38,7 +39,7 @@ public:
 signals:
 
 public slots:
-      void ONE_CHAT_MSG_ACK_Select(QString& data);//具体选择触发显示哪个好友界面的函数
 
+      void GROUP_CHAT_MSG_ACK_Select(QString& data);
 };
-#endif // GROUP_H
+#endif // GROUP_GROUP_H

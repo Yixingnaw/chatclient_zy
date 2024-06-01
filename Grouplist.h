@@ -7,9 +7,7 @@
 #include <QMouseEvent>
 #include <QList>
 #include <QHBoxLayout>
-
-#include "Buddy.h"
-#include "Group.h"
+#include "Group_group.h"
 
 
 class Grouplist : public QListWidget
@@ -17,7 +15,7 @@ class Grouplist : public QListWidget
     Q_OBJECT
 private:
     QWidget* m_parent;
-    QList<Group*> m_groupList;    // 分组列表
+    QList<Group_group*> m_groupList;    // 分组列表
 
     QString group_data;
 protected:
@@ -28,7 +26,7 @@ public:
     explicit Grouplist(QWidget *parent=nullptr,QString data_="");
     ~Grouplist();
 
-    void addGroup(Group* group);
+    void addGroup(Group_group* group);
 
     void setFriendList(QString&);       // 获取群组列表
     void displayFriendList();   // 将群组列表显示到界面

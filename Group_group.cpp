@@ -1,71 +1,73 @@
-#include "Group.h"
+#include "Group_group.h"
+
+
 #include <QJsonDocument>
 #include <QJsonObject>
 #include<QJsonArray>
 #include <QDebug>
 
-Group::Group(int id, QString name)
+Group_group::Group_group(int id, QString name)
 {
     m_isHide = true;
     m_id = id;
     m_name = name;
 }
 
-Group::~Group()
+Group_group::~Group_group()
 {
     qDebug() << "Group::~Group()";
-    for (int i=0; i<m_friendList.count(); i++) {
-        delete m_friendList[i];
+    for (int i=0; i<m_groupList.count(); i++) {
+        delete m_groupList[i];
     }
 
-    m_friendList.clear();
+    m_groupList.clear();
 }
 
-int Group::id()
+int Group_group::id()
 {
     return m_id;
 }
 
-QString Group::name()
+QString Group_group::name()
 {
     return m_name;
 }
 
-void Group::addBuddy_friend(Buddy *buddy)
-{
+void Group_group::addBuddy_group(Buddy_group *buddy){
+
     if (NULL == buddy) {
         return;
     }
 
-    m_friendList.append(buddy);
+    m_groupList.append(buddy);
 }
 
-void Group::setListwidgetItem(QListWidgetItem* item)
+void Group_group::setListwidgetItem(QListWidgetItem* item)
 {
     if (NULL != item) {
         m_item = item;
     }
 }
 
-void Group::displayGroup(QListWidget* listWidget)
+void Group_group::displayGroup(QListWidget* listWidget)
 {
-    for (int i=0; i<m_friendList.count(); i++) {
+
+    for (int i=0; i<m_groupList.count(); i++) {
         QListWidgetItem *newItem = new QListWidgetItem(listWidget);       //创建一个newItem
         newItem->setSizeHint(QSize(listWidget->width(), 50)); //设置宽度、高度
         listWidget->addItem(newItem);
-        listWidget->setItemWidget(newItem, m_friendList[i]);
+        listWidget->setItemWidget(newItem, m_groupList[i]);
         newItem->setHidden(m_isHide);
-        m_friendList[i]->setListwidgetItem(newItem);
+        m_groupList[i]->setListwidgetItem(newItem);
     }
-
 }
 
-QListWidgetItem* Group::item()
+QListWidgetItem* Group_group::item()
 {
     return m_item;
 }
 
-void Group::mousePress()
+void Group_group::mousePress()
 {
     //qDebug() << "void Group::mousePress()";
 
@@ -76,24 +78,21 @@ void Group::mousePress()
     }
     m_isHide = !m_isHide;
 
-    for (int i=0; i<m_friendList.count(); i++) {
-        m_friendList[i]->item()->setHidden(m_isHide);
+    for (int i=0; i<m_groupList.count(); i++) {
+        m_groupList[i]->item()->setHidden(m_isHide);
     }
-
 }
 
-void Group::ONE_CHAT_MSG_ACK_Select(QString& data){
-
+void  Group_group::GROUP_CHAT_MSG_ACK_Select(QString& data){
     QJsonDocument jsondoucment=QJsonDocument::fromJson(data.toUtf8());
     auto jsondata=jsondoucment.object();
-    int  SenderID=jsondata.value("SenderID").toInt();
-    for(auto x:m_friendList){
+    int  groupid=jsondata.value("GroupID").toInt();
+    for(auto x:m_groupList){
         //通过发送方主键id来识别唯一界面。
-        if(SenderID==x->id()){
+        if(groupid==x->getID()){
 
-            x->ONE_CHAT_MSG_ACK_(data);
+            x->GROUP_CHAT_MSG_ACK_(data);
             break;
         }
     }
 }
-

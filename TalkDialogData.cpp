@@ -120,7 +120,6 @@ void TalkDialog::ONE_CHAT_MSG_ACK_(QString& data){
                                             "<div style='font-size:small; color:grey;'>%1</div>"
                                             "<div>%2</div>"
                                             "</div>").arg(SendTime, Content);
-
     m_msgDisplayArea->appendHtml(formattedText);
 }
 
