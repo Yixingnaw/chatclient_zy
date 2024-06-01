@@ -33,6 +33,7 @@ protected:
     QString m_signature;    // 个性签名
     bool state;  //是否在线标识
     QImage m_headIcon;      // 头像
+
     //群组界面数据
      int  GroupID_;
      QString GroupName_;
@@ -58,9 +59,11 @@ public:
     int getID();
 
 signals:
-     void ONE_CHAT_MSG_ACK(QString&);//继续向分组界面传输数据。
+     void ONE_CHAT_MSG_ACK(QString&);//继续向好友分组界面传输数据。
+     void   GROUP_CHAT_MSG_ACK(QString&);//群组界面传输数据
 public slots:
       void ONE_CHAT_MSG_ACK_(QString& data);
+      void GROUP_CHAT_MSG_ACK_(QString& data);
 };
 
 #endif // BUDDY_H

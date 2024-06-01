@@ -123,3 +123,7 @@ void TalkDialog::ONE_CHAT_MSG_ACK_(QString& data){
 
     m_msgDisplayArea->appendHtml(formattedText);
 }
+
+void TalkDialog::GROUP_CHAT_MSG_ACK_(QString& data){
+
+}

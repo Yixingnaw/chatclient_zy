@@ -15,6 +15,7 @@ Grouplist::Grouplist(QWidget *parent,QString data) : QListWidget(parent), m_pare
 {
     setFriendList(data);
     displayFriendList();
+     connect(Socket::GetInstance(),&Socket::GROUP_CHAT_MSG_ACK,this,&Grouplist::GROUP_CHAT_MSG_ACK_);
 }
 
 Grouplist::~Grouplist()
@@ -61,7 +62,7 @@ void Grouplist::displayFriendList()
                                       //qDebug()<<GroupMember<<"会不会有一天";
         int id_=friendObject.value("GroupID").toInt();
           Buddy* buddy = new Buddy(id_,Username, PersonalSignature,GroupMember);
-           group_friend->addBuddy(buddy);
+           group_friend->addBuddy_group(buddy);
     }
 
     addGroup(group_friend);
@@ -111,4 +112,7 @@ void Grouplist::mousePree(QMouseEvent *event)
             }
         }
     }
+}
+void Grouplist::GROUP_CHAT_MSG_ACK_(QString& data){
+      emit GROUP_CHAT_MSG_ACK(data);
 }

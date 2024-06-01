@@ -73,9 +73,10 @@ public slots:
     void onMaxsizeBtn();
     void onCloseBtn();
     void onSendBtn();
-
+//群聊界面和好友聊天界面就一样了，得改
 public slots:
-      void ONE_CHAT_MSG_ACK_(QString& data);//真正的数据界面显示函数。
+      void ONE_CHAT_MSG_ACK_(QString& data);//真正的好友聊天数据界面显示函数。
+      void GROUP_CHAT_MSG_ACK_(QString& data);//群聊界面函数
 };
 
 #endif // TALKDIALOG_H

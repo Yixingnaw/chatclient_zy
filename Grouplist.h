@@ -34,7 +34,10 @@ public:
     void displayFriendList();   // 将群组列表显示到界面
     void mousePree(QMouseEvent *event);
 
-
+signals:
+     void GROUP_CHAT_MSG_ACK(QString&);//继续向分组界面传输数据。
+public slots:
+      void GROUP_CHAT_MSG_ACK_(QString& data);
 };
 
 

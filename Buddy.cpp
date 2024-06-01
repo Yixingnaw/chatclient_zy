@@ -143,6 +143,9 @@ void Buddy::ONE_CHAT_MSG_ACK_(QString& data){
 
      emit ONE_CHAT_MSG_ACK(data);
 }
+void  Buddy::GROUP_CHAT_MSG_ACK_(QString& data){
+
+}
 int Buddy::getID(){
     return  m_id;
 }

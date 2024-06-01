@@ -21,6 +21,7 @@ private:
     QListWidgetItem* m_item;
     QList<Buddy*> m_friendList;    // 好友列表
 
+    QList<Buddy*> m_groupList;    //群组列表
 protected:
 public:
     explicit Group(int id=0, QString name="");
@@ -28,7 +29,8 @@ public:
 
     int id();
     QString name();
-    void addBuddy(Buddy* buddy);
+    void addBuddy_friend(Buddy* buddy);
+    void  addBuddy_group(Buddy* buddy);
     void setListwidgetItem(QListWidgetItem* item);
     void displayGroup(QListWidget* listWidget);
 
@@ -37,6 +39,7 @@ public:
 signals:
 
 public slots:
-      void ONE_CHAT_MSG_ACK_Select(QString& data);//具体选择触发显示哪个界面的函数
+      void ONE_CHAT_MSG_ACK_Select(QString& data);//具体选择触发显示哪个好友界面的函数
+      void GROUP_CHAT_MSG_ACK_Select(QString& data);
 };
 #endif // GROUP_H

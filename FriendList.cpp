@@ -63,14 +63,14 @@ void FriendList::displayFriendList()   // 将好友列表显示到界面,这里�
         int  id_=friendObject.value("UserID").toInt();
         bool state_=friendObject.value("Sate").toBool();
           Buddy* buddy = new Buddy(state_,id_, Username, PersonalSignature);
-           group_friend->addBuddy(buddy);
+           group_friend->addBuddy_friend(buddy);
 
     }
 
     addGroup(group_friend);
 
     Group* group1 = new Group(1, "Friends");
-    connect(this,&FriendList::ONE_CHAT_MSG_ACK,group1,&Group::ONE_CHAT_MSG_ACK_Select);  //传递好友数据槽函数
+    connect(this,&FriendList::ONE_CHAT_MSG_ACK,group1,&Group::ONE_CHAT_MSG_ACK_Select);  //传递好友数据槽函数,每有一个这个group都得连一次
     addGroup(group1);
 
     for (int i=0; i<m_groupList.count(); i++) {
