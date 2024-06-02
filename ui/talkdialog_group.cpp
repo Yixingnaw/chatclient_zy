@@ -7,6 +7,9 @@
 #include<QIcon>
 #include"Socket.h"
 #include<QDateTime>
+#include<QKeyEvent>
+#include<QKeyEvent>
+int KeyPressEventFilter::count=0;
 talkdialog_group::talkdialog_group(int x,QString y,QString z,QString ui_data,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::talkdialog_group)
@@ -17,6 +20,14 @@ talkdialog_group::talkdialog_group(int x,QString y,QString z,QString ui_data,QWi
     groupname=y;
     description=z;
     constructUi();
+    KeyPressEventFilter *filter = new KeyPressEventFilter(this);
+    ui->textEdit->installEventFilter(filter);
+    this->installEventFilter(filter);
+
+
+    //  ui->pushButton->installEventFilter(filter);
+     //   ui->pushButton_2->installEventFilter(filter);
+
 }
 
 talkdialog_group::~talkdialog_group()
@@ -47,7 +58,7 @@ void talkdialog_group::constructUi(){
 void talkdialog_group::on_pushButton_clicked()
 {
     QString msg = ui->textEdit->toPlainText();
-
+     if(msg=="")return;
     if (Socket::GetInstance()) {
 
         QJsonObject message;
@@ -73,6 +84,8 @@ void talkdialog_group::on_pushButton_clicked()
         ui->textBrowser->append(formattedText);
 
         ui->textEdit->clear();
+}
+void talkdialog_group::history_handle_(QString& data){
 
 }
 
@@ -83,6 +96,7 @@ void talkdialog_group::GROUP_CHAT_MSG_ACK_(QString& data){
       switch (x) {
       case 1:{
 
+          break;
       }
       case 2:{
           QString SendTime=jsondata.value("SendTime").toString();
@@ -92,11 +106,19 @@ void talkdialog_group::GROUP_CHAT_MSG_ACK_(QString& data){
                                                   "<div>%2</div>"
                                                   "</div>").arg(SendTime, Content);
           ui->textBrowser->append(formattedText);
-
+          break;
       }
       default: break;
       }
       return ;
 }
 
+void talkdialog_group::on_pushButton_2_clicked()
+{
+    hide();
+}
 
+void talkdialog_group::history_handle_ACK(QString& data){
+
+
+}

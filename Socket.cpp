@@ -1,5 +1,6 @@
 #include "Socket.h"
 #include<QDebug>
+#include<QMessageBox>
 #include<QJsonDocument>
 #include<QJsonObject>
 #include"gloabal.h"
@@ -153,6 +154,7 @@ void Socket::onConnected()
 void Socket::onDisconnected()
 {
     m_connectStatus = false;
+      QMessageBox::warning(nullptr,"警告 ", "长时间不使用已经掉线");
 }
 //通过socket发出不同信号连接不同风格槽函数。
 void Socket::onDataReceived()

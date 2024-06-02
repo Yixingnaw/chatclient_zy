@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>652</width>
-    <height>510</height>
+    <width>820</width>
+    <height>658</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -88,6 +88,7 @@ background-color: rgb(255, 255, 255);</string>
        <widget class="QTextBrowser" name="textBrowser">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);
+font: 18pt &quot;微软雅黑&quot;;
 </string>
         </property>
        </widget>

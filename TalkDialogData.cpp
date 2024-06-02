@@ -83,9 +83,8 @@ void TalkDialog::onCloseBtn()
 void TalkDialog::onSendBtn()
 {
     QString msg = m_inputArea->toPlainText();
-
+     if(msg=="")return;
     if (m_socket) {
-
         QJsonObject message;
         message["msg_id"]=static_cast<int>(ServerMessage::ONE_CHAT_MSG);
         QJsonObject message_value;

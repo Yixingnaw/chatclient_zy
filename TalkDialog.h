@@ -73,10 +73,40 @@ public slots:
     void onMaxsizeBtn();
     void onCloseBtn();
     void onSendBtn();
-//群聊界面和好友聊天界面就一样了，得改
+
 public slots:
       void ONE_CHAT_MSG_ACK_(QString& data);//真正的好友聊天数据界面显示函数。
       void GROUP_CHAT_MSG_ACK_(QString& data);//群聊界面函数
+};
+class KeyPressEventFilter__ : public QObject {
+    Q_OBJECT
+
+public:
+    KeyPressEventFilter__(QObject *parent = nullptr) : QObject(parent) {}
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override {
+               qDebug()<<"我是你得爹0"<<"type:"<<event->type();
+
+               if (event->type() == QEvent::KeyPress) {
+                          QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+                          QPlainTextEdit *widget = qobject_cast<QPlainTextEdit *>(obj);
+                          qDebug()<<widget->objectName();
+                          TalkDialog *mainWindow = qobject_cast<TalkDialog *>(parent());
+                          if (keyEvent && widget) {
+                              if ((keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)) {
+                                   mainWindow->onSendBtn();
+                                      return true; // 吃掉这个事件
+                              }else if ( keyEvent->key() == Qt::Key_Escape) {
+                                      mainWindow->hide();
+                                      return  true;
+}
+                          }
+                      }
+
+           return QObject::eventFilter(obj, event);
+
+    }
 };
 
 #endif // TALKDIALOG_H

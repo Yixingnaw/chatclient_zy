@@ -18,7 +18,8 @@ TalkDialog::TalkDialog(QWidget *parent) : QWidget(parent)
 
     loadResource();
     constructUI();
-    connectSlots();
+    connectSlots();  
+    m_inputArea->installEventFilter(new KeyPressEventFilter__(this));
 }
 
 
