@@ -5,18 +5,21 @@
 #include<QJsonObject>
 #include"gloabal.h"
 #include<QtEndian>
+#include<QApplication>
 Socket* Socket::c_instance = NULL;
 
 Socket::Socket()
 {
     m_connectStatus = false;
     m_runFlag = false;
-    m_port = 9999;
+    m_port = 9997;
     m_ip = "192.168.124.14";
 
 
     flage=false;
     length=0;
+
+    startThread();//开启子线程定时发送心跳包
 }
 
 Socket::~Socket()
@@ -42,13 +45,6 @@ bool Socket::construct()
     connect(m_tcpSocket, SIGNAL(connected()), this, SLOT(onConnected()));
     connect(m_tcpSocket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
     connect(m_tcpSocket, SIGNAL(readyRead()), this, SLOT(onDataReceived()));
-
-    m_tcpSocket->connectToHost(*m_serverIP, m_port);
-    if(m_tcpSocket->waitForConnected(5000)){
-        qDebug()<<QString("连接成功");}
-    else{
-        qDebug()<<"连接失败";
-    }
 
     return true;
 }
@@ -81,7 +77,7 @@ bool Socket::runFlag()
 void Socket::startThread()
 {
     m_runFlag = true;
-    //start();
+    start();
 }
 void Socket::stopThread()
 {
@@ -91,10 +87,9 @@ void Socket::stopThread()
 
 bool Socket::sendMsg(const char* buf, int size)
 {
-    if (NULL==buf || size<=0) {
+    if (NULL==buf || size<=0||!m_connectStatus) {
         return false;
     }
-
     int ret = m_tcpSocket->write(buf, size);
     if (ret != size) {
         return false;
@@ -105,7 +100,23 @@ bool Socket::sendMsg(const char* buf, int size)
 
 bool Socket::sendMsg(QString msg)
 {
+
+    m_tcpSocket->connectToHost(*m_serverIP, m_port);
+    if(!m_connectStatus){
+    if(m_tcpSocket->waitForConnected(5000)){
+        qDebug()<<QString("连接成功");
+        m_connectStatus=true;
+    }
+    else{
+        qDebug()<<"连接失败";
+        return false;
+        }
+    }
+    if(m_connectStatus){
     return sendMsg(msg.toUtf8(), msg.toUtf8().size());
+    }else {
+        return  false;
+     }
 }
 
 bool Socket::userLogin(QString id, QString passwd)
@@ -142,7 +153,8 @@ bool Socket::foundPasswd()
 void Socket::run()
 {
     while (m_runFlag); {
-        QThread::sleep(1);
+        QThread::sleep(10);
+        sendMsg("a",2);//随便发送的心跳包数据
     }
 }
 
@@ -154,7 +166,8 @@ void Socket::onConnected()
 void Socket::onDisconnected()
 {
     m_connectStatus = false;
-      QMessageBox::warning(nullptr,"警告 ", "长时间不使用已经掉线");
+    QApplication::quit();
+
 }
 //通过socket发出不同信号连接不同风格槽函数。
 void Socket::onDataReceived()

@@ -320,21 +320,6 @@ void LoginDialog::onLoginBtn()
         return;
     }
 
-    /*qDebug() << endl;
-    qDebug() << "void LoginDialog::onLoginBtn()";
-    qDebug() << "id:" << curUserInfo.id;
-    qDebug() << "passwd:" << curUserInfo.passwd;
-    qDebug() << "remeberPasswd:" << curUserInfo.remeberPasswd;
-    qDebug() << "autoLogin:" << curUserInfo.autoLogin;
-    */
- /*
-  {"msg_id":
-   "msg_value":{
-    "UserID":
-    "Password":
-  }
-*/
-    // 向服务器发送账号密码，缺乏回馈
     if (NULL != m_socket) {
         QJsonObject message;
         message["msg_id"]=static_cast<int>(ServerMessage::LOGIN_MSG);
@@ -344,12 +329,14 @@ void LoginDialog::onLoginBtn()
         message["msg_value"]=message_value;
         QJsonDocument personDocument(message);
         QString jsonstring = personDocument.toJson();
-       m_socket->sendMsg(jsonstring);
+       if(m_socket->sendMsg(jsonstring)){
+          _sleep(10);
 
+           return;
+   }
     }
 
 }
-
 
 void LoginDialog::onIdCurrentTextChanged(const QString &text)
 {
@@ -365,7 +352,6 @@ void LoginDialog::onIdCurrentTextChanged(const QString &text)
             break;
         }
     }
-
     m_passwdEdit->clear();
     m_remeberPasswd->setChecked(false);
     m_autoLogin->setChecked(false);

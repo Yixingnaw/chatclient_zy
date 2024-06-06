@@ -34,6 +34,8 @@ public slots:
     void history_handle_(QString& data);//加载历史消息
 public:
     void history_handle_ACK(QString& data);
+
+    bool event(QEvent *event) override;
 };
 class KeyPressEventFilter : public QObject {
     Q_OBJECT
@@ -43,7 +45,7 @@ public:
     static int count;
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override {
-               qDebug()<<"我是你得爹0"<<++count<<"type:"<<event->type();
+               qDebug()<<"我是你得儿子的eventfiter"<<++count<<"type:"<<event->type();
 
                if (event->type() == QEvent::KeyPress) {
                           QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
@@ -62,5 +64,34 @@ protected:
          return QObject::eventFilter(obj, event);
     }
 };
+class KeyPressEventFilter_ : public QObject {
+    Q_OBJECT
 
+public:
+    KeyPressEventFilter_(QObject *parent = nullptr) : QObject(parent) {}
+    static int count;
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override {
+               qDebug()<<"我是你得爹的eventfiter"<<++count<<"type:"<<event->type();
+
+               if (event->type() == QEvent::KeyPress) {
+                          QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+                          QTextEdit *widget = qobject_cast<QTextEdit *>(obj);
+                          talkdialog_group *mainWindow = qobject_cast<talkdialog_group *>(parent());
+                          if (keyEvent && widget) {
+                              if ((keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)&&widget->objectName()=="textEdit") {
+                                   mainWindow->on_pushButton_clicked();
+                                      return true; // 吃掉这个事件
+                              }else if ( keyEvent->key() == Qt::Key_Escape) {
+                                  mainWindow->hide();
+                                  return  true;
+}
+                          }
+                      }
+               if (event->type() == QEvent::WindowDeactivate) {
+                   return  true;
+                      }
+         return QObject::eventFilter(obj, event);
+    }
+};
 #endif // TALKDIALOG_GROUP_H

@@ -10,6 +10,7 @@
 #include<QKeyEvent>
 #include<QKeyEvent>
 int KeyPressEventFilter::count=0;
+int KeyPressEventFilter_::count=0;
 talkdialog_group::talkdialog_group(int x,QString y,QString z,QString ui_data,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::talkdialog_group)
@@ -22,7 +23,7 @@ talkdialog_group::talkdialog_group(int x,QString y,QString z,QString ui_data,QWi
     constructUi();
     KeyPressEventFilter *filter = new KeyPressEventFilter(this);
     ui->textEdit->installEventFilter(filter);
-    this->installEventFilter(filter);
+    this->installEventFilter(new KeyPressEventFilter_(this));
 
 
     //  ui->pushButton->installEventFilter(filter);
@@ -121,4 +122,8 @@ void talkdialog_group::on_pushButton_2_clicked()
 void talkdialog_group::history_handle_ACK(QString& data){
 
 
+}
+bool  talkdialog_group::event(QEvent *event){
+    qDebug()<<"我是你得爹的event函数"<<"type:"<<event->type();
+    return  QWidget::event((event));
 }
